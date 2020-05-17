@@ -1,0 +1,1475 @@
+_______________________Spring Level 1 - First 10 Steps in Spring_____________________
+"Jenny, I don't know if Momma was right or if, if it's Lieutenant Dan. I don't know if we each have a destiny, or if we're all
+just floating around , accidental-like on a breeze, but I, I think maybe it's both. Maybe both is happening at the same time."
+
+What is Spring?__
+***[Spring is a Dependency Injection Framework]
+Software needs (depends) on other software
+
+What is Dependency Injection?
+
+What is a Dependency?
+E.g.: Business Layer is a DEPENCY of the Web Layer
+E.g.: Data Layer is a DEPENCY of the Business Layer
+E.g.: Member Methods are DEPENCIES of a Class
+
+-----
+Tight Coupling is BAD
+Loose Coupling is GOOD
+Tight coupling is when a group of classes are highly dependent on one another.
+This scenario arises when a class assumes too many responsibilities, or when one concern is spread over
+many classes rather than having its own class.
+
+Loose coupling is achieved by means of a design that promotes single-responsibility and separation of concerns.
+A loosely-coupled class can be consumed and tested independently of other (concrete) classes.
+
+Tight coupling is when a group of classes are highly dependent on one another.
+This scenario arises when a class assumes too many responsibilities, or when one concern is spread over many
+classes rather than having its own class.
+
+Loose coupling is achieved by means of a design that promotes single-responsibility and separation of concerns.
+-----
+-----
+Inversion of Control (IoC) and Dependency Injection (DI) are used interchangeably. ... By DI, the responsibility of
+creating objects is shifted from our application code to the Spring container; this phenomenon is called IoC.
+Dependency Injection can be done by setter injection or constructor injection
+-----
+
+Creating Objects and Populating Dependencies - Spring Framework
+
+It my job as a developer to tell Spring Framework:
+- What are the Objects you need to manage, and
+- What are the Dependencies of each Class
+
+@Component   // Spring you need to manage instances of ComplexBusinessService
+public class ComplexBusinessService {
+	SortAlgorithm sort
+
+@Component   // Spring you need to manage instances of BubbleSortAlgorithm
+public class ComplexBusinessService implement SortAlgorithm {
+
+But how do you tell (inform Spring) that SortAlogrithm is a Dependecy of ComplexBusinessService?
+@Component   // Spring you need to manage instances of ComplexBusinessService
+public class ComplexBusinessService {
+	@Autowired
+	SortAlgorithm sort
+
+@Autowired - Spring starts looking for this Dependecy
+
+Beans - Object instances that Spring manages are called Beans.
+Autowiring - The process were Spring identifies the dependencies, finds matches for the dependencies and populates them
+Inversion of Control - Taking the control of the tightly couple dependency of a class and giving its control to Spring 
+                            - A process in which an object defines its dependencies without creating them.
+IOC Container - General terminology for anything that is implementing IOC
+Application Context - The most important IOC Container is the Spring Framework
+
+
+************************* Creating a project through Spring Initializr ****************************
+Spring Initializr - https://start.spring.io/
+Course a Spring Boot version 2.0+ ~= Spring 5  //GPC: I think
+// avoid SNAPSHOT versions
+
+You know how to fill out a Spring Initializr page, which drops a zip file to where you want:
+
+// 8.Step3: Making BinarySearch Losely Coupled
+SortAlgorithm is a Dependecy of the BinarySearch
+BinarySearch depends of SortAlgorithm
+
+* Most important concepts behind Spring in Dependency Injection and Loose Coupling
+// 9.Step4: Using Spring Framework to Manage Dependencies
+Your need to tell Spring about to wire beans together:
+1. What are the beans that Spring has to manage? BinarySearchImpl, BubbleSortAlgo
+2. What are the dependencies of a bean? BinarySearchImpl->SortAlgorithm
+3. Where to search for beans? (Component Scan) => No need, all of our code is in the same package
+ApplicationContext - manages all the beans
+
+// 10.Step5: What is happening in the background?
+src/main/resources/application.properties: //add following line
+logging.level.org.springframework = debug;
+* studied the logging for bean identification and autowiring of dependencies
+
+// 11.Step6: Dynamic auto wiring and Troubleshooting - @Primary
+Both classes implement SortAlgorithm which cause a problem, making BubbleSortAlgorithm the @Primary solves this
+@Component
+@Primary
+public class BubbleSortAlgorithm implements SortAlgorithm {
+@Component
+public class QuickSortAlgorithm implements SortAlgorithm{
+
+// 12.Fastest Approach to Solve All Your Exceptions
+This 50 page troubleshooting guide and faq is our way of thanking you for choosing to learn from in28Minutes.
+It provides solutions for 200 FAQ and Frequently faced Problems. 
+Here's the Quick Start with Top 10 FAQ 
+https://github.com/in28minutes/in28minutes-initiatives/blob/master/The-in28Minutes-TroubleshootingGuide-And-FAQ/quick-start.md
+
+// 13.Step7: Constructor and Setter Injection
+In our code neither a Constructor or Setter is needed for Injection;
+@Autowired
+private SortAlgorithm sortAlgorithm;
+// This alone will automatically search for a SortAlgorithm through the tree of dependencies
+
+// 14.Step8: Spring Modules [illustration on overview of Spring Modules]
+
+// 15.Step9: Spring Projects [illustration an overview of different types of Spring Projects]: SpringBoot Most Popular
+
+// 16.Step10: Why is Spring Popular?
+1. Enables writing testable code
+2. No plumbing Code
+3. Flexible Architecture
+4. Staying Current (with the trends)
+
+
+
+__________________________Spring Level 2 - Spring in depth__________________________
+// 18.Step11: Dependency Injection - a few more examples
+Happy Horseshit - blah, blah, blah, already covered
+
+// 19.Step12: Autowiring in Depth - by Name and @Primary
+@Primary has presedence over Named
+Happy Horseshit - blah, blah, blah, already covered
+
+// 20.Step13 - Autowiring in Depth - @Qualifier annotation
+So for competing dependencies we have 3 options: @Qualifier("name"), @Primary, Named
+
+// 21.Step14 - Scope of a Bean - Prototype and Singleton
+- Default: singleton - One instance per Spring Context
+- prototype - New bean whenever requested
+- request - One bean per HTTP request
+- session - One bean per HTTP session
+
+// 22. Step15 - Complex scenarios with Scope of a Spring Bean - Mix of Prototype and Singleton
+Use proxy to get a new instance of the Depency
+
+// 23. Step 15B - Difference Between Spring Singleton and GOF(Gang Of Four) Singleton
+Happy Horseshit - blah, blah, blah
+
+// 24. Step 16 - Using Component Scan to scan for beans
+@SpringBootApplication  //Automatically does a Component Scan the main class package and subpackages
+
+But, if your components are elsewhere, then:
+package com.jerryc.spring.basics.springin5steps; // Default package to scan
+@SpringBootApplication
+@ComponentScan("com.jerryc.spring.basics.componentscan") // tell the application to package scan here
+public class SpringIn5StepsComponentscanApplication {
+- Think of @ComponentScan like a search for compenents
+
+
+// 25. Step 17 - Lifecycle of a Bean - @PostConstruct and @PreDestroy
+The life cycle of a bean is controlled by: **"the Spring IOC Container"**
+After the bean is created and initialized with its dependencies, then the @PostConstruct Method is called.
+@PostConstruct
+public void postConstructInit() {
+	logger.info("postConstructInit- do further initialization of the BinarySearchImpl bean");
+}
+@PreDestroy
+public void preDestroyStuff() {
+	logger.info("preDestroyStuff- do further cleanup before the BinarySearchImpl bean is removed from IOC Container");
+}
+//NOTE: did not see preDestroyStuff corresponding log entry???
+
+
+// 26. Step 18 - Container and Dependency Injection (CDI) - @Named, @Inject
+CDI is a standard names the annoations and functionality of the **"the Spring IOC Container"**
+CDI is an interface that defines how to do Depency Injection
+Alike a Standard for JPA(Defines the interface) and Hibernate(Understands JPA IPA and implements it).
+Why in the flying Flock are there psuode equilant tags from the CDI.
+Why didn't Spring just do what the Standard stated. WTF:GPC
+CDI Standard:
+@Inject, Spring uses @Autowired
+@Named, Spring uses @Component, @Qualifier
+@Singleton, Spring defines a scope Singleton
+
+What is this Cluster Flock? (GPC: I think I'm in a nightmare)
+Instructor: CDI showed a new way of doing the above (GPC:WTF)
+So you can use the Spring annotations OR the CDI anotations, Which One?
+CDI: 51% vote because its the standard, Spring Implementation: 49% because its the implemation
+What kind of sick dev world has these different ~= equal annotations (GPC:WTF)
+This course will continue with Spring Annotations. (I guess this was a heads-up)
+I have NEVER seen a standard that says @ABC is the annotation; but, the implentation was @XYZ (GPC:WTF)
+
+// 28. Step 19 - Removing Spring Boot in Basic Spring Core Application
+/*As we start removing Spring Boot and bringing in Spring core in the next step, you would see
+A few SLF4J errors.
+Logging does not work
+Do not worry about them. We will fix them in Step 20.*/
+- In pom.xml commented out:
+<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+</dependency>
+- Added
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
+- Updated SpringIn5StepsBasicApplication.java from Spring Boot to Spring Core (See Code)
+Exercise: Migrate the other inbedded applications (GPC:WTF, and loose want I learned, WTF)
+
+
+// 29. Step 20 - Fixing minor stuff - Add Logback and Close Application Context
+Yep,(I only updated SpringIn5StepsBasicApplication.java), (GPC:FYI:JunkInTheTrunk)
+
+
+// 30. Step 21 - Defining Spring Application Context using XML - Part 1
+****Before Spring 2.5 Beans and Dependencies HAD do be defined in an xml file.
+      In retrospect, very bad as compared to Annotations****
+Created resources/applicationContext.xml <--------<<<
+We need to define a NAMESPACE 
+Google: spring documation applcation context example
+https://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/beans.html
+3.2.1 Configuration metadata
+The following example shows the basic structure of XML-based configuration metadata:
+Copied content to resources/applicationContext.xml: ***We will define the beans and there dependencies***
+[Code:XmlJdbcConnection -> copy qualified name -> applicationContext.xml: class="here"]
+ BEFORE: <bean id="..." class="...">
+ AFTER:
+ <bean id="xmlJdbcConnection" class="com.jerryc.spring.basics.springin5steps.xml.XmlJdbcConnection">
+
+
+// 31. Step 22 - Defining Spring Application Context using XML - Part 2
+resources/applicationContext.xml:
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+  <bean id="xmlJdbcConnection"
+  	class="com.jerryc.spring.basics.springin5steps.xml.XmlJdbcConnection">
+  </bean>
+
+  <!-- xmlPersonDAO DEPENDS on xmlJdbcConnection == @Autowired -->
+  <bean id="xmlPersonDAO"
+  	class="com.jerryc.spring.basics.springin5steps.xml.XmlPersonDAO">
+  	<property name="xmlJdbcConnection" ref="xmlJdbcConnection"/>
+  </bean>
+  
+</beans>
+
+Also,
+XmlJdbcConnection.java and XmlPersonDAO.java stripped of ALL Annotations
+SpringIn5StepsXMLContextApplication.java
+:
+public static void main(String[] args) {
+	
+		try (ClassPathXmlApplicationContext applicationContext =
+			new ClassPathXmlApplicationContext("applicationContext.xml")) {
+:
+
+
+// 32. Step 23 - Mixing XML Context with Component Scan for Beans defined with Annotations
+- ApplicationContext.xml(added) <context:component-scan base-package="com.jerryc.spring.basics"/>
+- SpringIn5StepsXMLContextApplication.java
+LOGGER.info("Beans Loaded -> {}", (Object) applicationContext.getBeanDefinitionNames());
+Log:
+Beans Loaded -> [componentDAO, scopedTarget.componentJdbcConnection, componentJdbcConnection, 
+springIn5StepsBasicApplication, binarySearchImpl, bubbleSortAlgorithm, quickSortAlgorithm,
+someCdiBusiness, someCdiDao, scopedTarget.jdbcConnection, jdbcConnection, personDAO,
+org.springframework.context.annotation.internalConfigurationAnnotationProcessor, 
+org.springframework.context.annotation.internalAutowiredAnnotationProcessor, 
+org.springframework.context.annotation.internalCommonAnnotationProcessor, 
+org.springframework.context.event.internalEventListenerProcessor, 
+org.springframework.context.event.internalEventListenerFactory, xmlJdbcConnection, xmlPersonDAO]
+
+
+// 33. Step 24 - IOC Container vs Application Context vs Bean Factory
+IOC - shifting tightly-coupled to loosely-coupled components 
+IOC Container - Concept responsible for Identifying, Injecting and Managing the IOC Components, Dependencies, etc.
+In Spring there are 2 implementation of the IOC Container.
+1. Application Context - We have been only been using Application Context
+   (Spring recommended 99% of the time, except when memory is a premium)
+   Application Context - Bean Factory++ for full full EE Applications
+2. Bean Factory - basic wiring of spring-core Components. It is a subset of Application Context
+
+
+// 34. Step 25 - @Component vs @Service vs @Repository vs @Controller
+What is the difference between them and when to use what
+@Component - If you are not sure which one to use, then go with @Component until deemed otherwise
+@Controller - Used in Spring MVC, used to define a Controller in the Web(UI) Layer
+- Makes sure the Model is populated and the correct View is rendered
+@Service - Used at the Business Layer, 
+@Repository - Used at the Data Layer,
+E.G.s:
+com.jerryc.spring.basics.springin5steps.scope.PersonDAO.java
+@Repository
+public class PersonDAO {	
+	@Autowired
+	JdbcConnection jdbcConneciton;
+-----
+com.jerryc.spring.basics.springin5steps.basic.BinarySearchImpl.java
+@Service
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class BinarySearchImpl {
+	private Logger logger = LoggerFactory.getLogger(this.getClass());	
+	@Autowired
+	@Qualifier("quick")
+	private SortAlgorithm sortAlgorithm;
+-----
+com.jerryc.spring.basics.springin5steps.basic.BubbleSortAlgorithm.java & QuickSortAlgorithm.java
+@Service
+@Qualifier("bubble")
+public class BubbleSortAlgorithm implements SortAlgorithm {
+-----
+***** If there is NO change in functionality, then why use a specific Annotation? *****
+AOP - You can identify the annotation and add functionality (talk more about this in AOP section)
+Allows you to classify you Components into different Categories
+Spring has a different Exception functionality for different Annotations
+You want to log everything in your Business Layer, then you can track @Service component logic
+
+
+// 35. Step 26 - Read values from external properties file
+resource/app.properties:
+external.service.url=http://someserver.dev.com/service
+
+com.jerryc.spring.basics.springin5steps.properties.SomeExternalService.java
+@Component
+public class SomeExternalService {
+	//external.service.url, from app.properties
+	@Value("${external.service.url}")
+	private String url;
+	
+	public String returnServiceURL() {
+		return url;
+	}
+}
+
+com.jerryc.spring.basics.springin5steps.SpringIn5StepsPropertiesApplication.java
+@Configuration
+@ComponentScan
+@PropertySource("classpath:app.properties")
+public class SpringIn5StepsPropertiesApplication {
+	
+	public static void main(String[] args) {
+		
+		try (AnnotationConfigApplicationContext applicationContext =
+			new AnnotationConfigApplicationContext(SpringIn5StepsPropertiesApplication.class)) {
+		
+			SomeExternalService someExternalService = applicationContext.getBean(SomeExternalService.class);
+			System.out.println(someExternalService.returnServiceURL());
+
+		}
+	}
+}
+
+<<<<<<<<<< SIDE NOTE: Getting unknown error from 1st line of pom.xml, FIX: >>>>>>>>>>
+	<properties>
+		<java.version>1.8</java.version>
+		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>   <---***** Added this line
+	</properties>
+
+
+
+______________________Spring Level 3 - Unit Testing with Spring Framework_____________________
+-------------Spring Unit Testing with Java Context
+// 36. JUnit in 5 Steps 
+
+// 37. Step 1 : What is JUnit and Unit Testing?
+Unit Testing - Testing a specific method or class
+JUnit - Frameword for doing unit testing
+Once you write the JUnit test, then it is automated (you can run it again and again) -- Continuous Integration
+
+// 38. Step 2 : First JUnit Project and Green Bar
+Create /test fold separate from src/ folder
+@Test  - Annotation for a JUnit Test
+Absence is failure is Success
+// 39. Step 3 : First Code and First Unit Test
+// 40. Step 4 : Other assert methods
+// 41. Step 5 : Important annotations
+**** The Above Spring JUnit Testing with Java Context was LAME compard to other JUnit tutorials that I have taken *****
+
+-------------Spring Unit Testing with Mockito
+Seciton: Using Mockito Annotations - @Mock, @InjectMocks, @RunWith
+/mockito-unit-testing/src/test/java/com/jerryc/spring/mockito/mockitounittesting/SomeBussinessMockAnnotationTest.java
+***** FAILED when I tried to run tests *****
+FIX WITH - TestingWTF_FIX
+SUSPECTED PROBLEM: <------------------************************* == TestingWTF
+- Instructor using JUnit 4 and Mockito
+- I'm using JUnit Jupiter/JUniit 5 and Mockito
+DETERMINED FIX:  <-----------------------************************* == TestingWTF_FIX
+- I Added JUnit 5 Library to project
+- Added dependency:
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>5.2.5.RELEASE</version>
+		</dependency>
+--> Which added spring-test-5.2.5.RELEASE.jar 
+> org.springframework.test.context.junit.jupiter
+>> SpringExtension.class
+I determined and used:
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes= {SpringIn5StepsBasicApplication.class})
+public class BinarySearchTest {		
+Instead of:
+@RunWith(SpringRunner.class)
+@ContextConfiguration(classes= {SpringIn5StepsBasicApplication.class})
+public class BinarySearchTest {
+DETERMINED FIX:  <-----------------------************************* == TestingWTF_FIX
+
+-------------Spring Unit Testing in my project spring-in-5-steps (https://github.com/jerry-carney/spring-in-5-minutes)
+TestingWTF_FIX
+- Instructor removed current spring test dependency and added a few more, result: Errors all through the project
+
+- I commented out the added dependencies and remained with the current spring test dependency == NO CHANGE
+Step 27 - Spring Unit Testing with a Java Context
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes= {SpringIn5StepsBasicApplication.class})
+public class BinarySearchTest {	
+- TestingWTF_FIX - I used this instead of what the instructor was using
+
+
+Step 28 - Spring Unit Testing with an XML Context
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(locations="/applicationContext.xml")
+public class BinarySearchXmlConfigurationTest {
+
+Step 29 - Spring Unit Testing with Mockito
+	@Mock
+	SomeCdiDao daoMock;
+	
+	@InjectMocks
+	SomeCdiBusiness businessMock;
+	
+	@Test  // Mock Test
+	public void testMockScenario() {
+		when(daoMock.getData()).thenReturn(new int[] {24, 15, 3});
+		assertEquals(24, businessMock.findTheGreatestFromAllData());
+	}
+
+
+
+____________________________Spring Level 5 - Spring Boot in 10 Steps___________________________
+Step 1 : Introduction to Spring Boot - Goals and Important Features
+Built-In Features
+- Instead of one big application, Industry is moving towards mulituple smaller microservices
+- Want to build microservices quickly, that is where Spring Boot coming in
+- Spring Boot: >>>> #1 Framework to build microservices in the Java world <<<
+- Spring Boot: is Neither an application server nor a web server. But provides integrations with these
+- Starter Projects with Auto Configuration: Web, JPA, Embedded Servers (embed Tomcat with application jar)
+- Spring Boot Actuator: monitoring/metrics, # of times a service is called/failed, run status
+- Externized configuration: Dev != Test != Production
+
+Step 2 : Developing Spring Applications before Spring Boot
+- Have to determine frameworks and dependencies/versions to use
+- Handle default exception handling
+- Example: in28minutes/SpringMvcStepByStep Repo - had to determine a ton of dependencies/versions
+- Spring Boot provides what you need so you can concentrate on your business-logic, infrastructure is free
+
+Step 3 : Using Spring Initializr to create a Spring Boot Application
+- start.spring.io (GPC: I have used Spring Initializr many times)
+- Dependencies: Spring Web, generate -> springboot-in-10-steps.zip -> unzip into folder on hard drive
+- In Eclipse -> Import -> Existing Maven Project -> ../../springboot-in-10-steps folder
+- Fix pom.xml error (PainInTheAss)
+	<properties>
+		<java.version>1.8</java.version>
+		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>   <---***** Added this line
+	</properties>
+- Then, Click on project name: spring-boot-in-10-steps -> Maven -> Update Project
+
+
+Step 4 : Creating a Simple REST Controller 
+- SpringbootIn10StepsApplication.java -> main -> run as Java Application
+:
+Tomcat initialized with port(s): 8080 (http)
+:
+Started SpringbootIn10StepsApplication in 6.034 seconds (JVM running for 7.227)
+- http://localhost:8080:/books
+- Added the minimum appropriate classes
+- NOTE: Eclipse NOT finding annotation imports; e.g.: @RestController (Had to look it up and add it)
+- Run as Java Application
+- Using Chrome extension "Talend API Tester", GET http://localhost:8080:/books returned all books (JSON)
+OR
+- Add browser tab: http://localhost:8080/books ENTER, returns all books (JSON)
+
+
+Step 5 : What is Spring Boot Auto Configuration?
+------ AUTO CONFIGURATION is <<<Awesome>>> and it is fundamental to the SPRING FRAMEWORK ------
+------ It Very Important that you understand it! ------
+- How did we get all those cool things for free?
+@SpringBootApplication       {Bean == Component}
+1. Indicates this is a Spring Context file
+2. Enables Auto Configuration
+3. Enables Component Scan - Think of @ComponentScan as search for all compenents and dependencies
+@RestController        {Registering as a Bean and managed by the Spring Framework}
+
+	public static void main(String[] args) {
+		ApplicationContext applicationContext =
+				SpringApplication.run(SpringbootIn10StepsApplication.class, args);
+		for (String name : applicationContext.getBeanDefinitionNames()) {
+			System.out.println("GPC-Bean: " + name);
+		}
+	}
+SpringApplication.run
+1. Used to run a Spring Context
+2. Returns an ApplicationContext
+resources/application.properties: logging.level.org.springframework = debug
+{{{{ Auto Configuration }}}}  W O W! Dozens of beans!
+GPC-Bean: org.springframework.context.annotation.internalConfigurationAnnotationProcessor
+GPC-Bean: org.springframework.context.annotation.internalAutowiredAnnotationProcessor
+GPC-Bean: org.springframework.context.annotation.internalCommonAnnotationProcessor
+GPC-Bean: org.springframework.context.event.internalEventListenerProcessor
+GPC-Bean: org.springframework.context.event.internalEventListenerFactory
+GPC-Bean: springbootIn10StepsApplication
+GPC-Bean: org.springframework.boot.autoconfigure.internalCachingMetadataReaderFactory
+GPC-Bean: booksController
+GPC-Bean: org.springframework.boot.autoconfigure.AutoConfigurationPackages
+:
+GPC-Bean: spring.servlet.multipart-org.springframework.boot.autoconfigure.web.servlet.MultipartProperties
+GPC-Bean: org.springframework.aop.config.internalAutoProxyCreator
+
+Maven Dependencies
+> spring-boot-autoconfigure-2.2.6.RELEASE.jar
+>> org.springframework.boot.autoconfig.web
+>> org.springframework.boot.autoconfig.web.serlvet
+
+At startup: the Spring Boot Framework triggers Auto Configuration looks at
+1. Frameworks available on the CLASSPATH via {Maven jars}
+2. Existing Beans configured for the application {Component Scan}
+
+
+Step 6 : Spring Boot vs Spring Framework vs Spring MVC 
+- They each have there own roles. They solve different problems, and they solve them very, very well!
+Spring Framework - Most important feature is Dependency Injection. At the core of all Spring Modules is
+   Dependency Injection or IOC of Control -A process where an object defines its dependencies without creating them.
+   I.E. Defining your loosely coupled Beans and Annotations and depedencies for Component Scan.
+   I.E. You can use @Mock in place of @Autowired for Testing
+   I.E. Reduce Boilerplate Code/ Reduce Duplicaiton, Promote Decoupling/ Increase Unit Testibility
+         with Spring Modules: JDBC, MVC, AOP, ORM, JMS, Test, etc.
+   I.E. Good integration with other frameworks: Hibernate, JUnit, Mockito
+   DI and IOC.
+   
+Spring MVC Framework - provides decoupled way of developing web applications. With simple concepts like
+   Dispatch Servlet, ModelAndView and View Resolver, it makes it easy to develop web applications.
+   
+Spring Boot - Spring based applications have a lot of configuration. Auto Configuration takes care of this.
+   Spring Boot Auto Configuration brings a new thought process around this.
+   Can we bring more intelligence into this? Whan a spring mvc jar is added to an application, can we
+       configure some beans automatically?
+   Provides starters: spring-boot-starter-acuator, spring-boot-starter-log4j2, etc.
+   
+
+Step 7 : Spring Boot Starter Projects - Starter Web and Starter JPA 
+- start.spring.io (GPC: I have used Spring Initializr many times)
+- Dependencies: [[[Spring Web]]], generate -> springboot-in-10-steps.zip -> unzip into folder on hard drive
+- In Eclipse -> Import -> Existing Maven Project -> ../../springboot-in-10-steps folder
+[[[Spring Web]]] - Preferred Starter for Web Applications and RESTful Web Services
+/springboot-in-10-steps/pom.xml:
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+Cntrl-Click over dependency and click on "Open pom.xml for org.springbootframework.boot:spring-boot-starter-web"
+org.springbootframework.boot:spring-boot-starter-web:2.2.6.RELEASE.pom: (NOTE the dependencies)
+E.g.: spring-boot-starter-tomcat: Application is automatically running in "Tomcat" because of this depency below
+E.g.: spring-boot-starter-json: We used JSON in our RESTful service
+E.g.: spring-boot-starter: brings in logging and other useful functionalities (jars)
+E.g.: spring-web, spring-webmvc: and their dependencies poms/jars
+***** When you look at all starter projects they have a set of depencies that are already defined *****
+- Add these dependencies (their jar files) are automatically added to our project
+- You can repeat the same process of clicking on these depencies to view their dependencies pom/jars
+- [[[Auto Configuration]]] is kicking into action
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+      <version>2.2.6.RELEASE</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-json</artifactId>
+      <version>2.2.6.RELEASE</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-tomcat</artifactId>
+      <version>2.2.6.RELEASE</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
+      <version>2.2.6.RELEASE</version>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>tomcat-embed-el</artifactId>
+          <groupId>org.apache.tomcat.embed</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <version>5.2.5.RELEASE</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>5.2.5.RELEASE</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+  
+ Lets added JPA to our pom.xml file: Perist data in SQL stores with Java Persistence API using Spring Data and Hibernate
+ 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+- You can repeat the same process of clicking on these depencies to view their dependencies pom/jars
+org.springbootframework.boot:spring-boot-starter-data-jpa:2.2.6.RELEASE.pom:
+I.E.:	hibernate-core, org.jboss.spec.javax.transaction, javax.persistence, spring-boot-starter-jdbc, etc...
+
+
+Step 8 : Overview of different Spring Boot Starter Projects
+As we see from Spring Boot Starter Web, starter projects help us in quickly getting started with developing
+  specific types of applications
+- spring-boot-starter-web-services - SOAP Web Services. I.E. (SoapUI, XML Wizdle, GTL)
+- spring-boot-starter-web - Web and RESTful applications
+- spring-boot-starter-test - Unit and Integration Testing
+- spring-boot-starter-jdbc - Traditional JDBC
+- spring-boot-starter-hateoas - Add HATEOAS features to your services
+Hypermedia as the Engine of Application State (HATEOAS) is a component of the REST application architecture that
+  distinguishes it from other network application architectures. With HATEOAS, a client interacts with a network application
+  whose application servers provide information dynamically through hypermedia.
+- spring-boot-starter-security - Authenticaiton and Authororization using Spring Security
+- spring-boot-starter-data-jpa - Spring Data JPA with Hibernate
+- spring-boot-starter-cache - Enabling Spring Frameworkk's caching support
+- spring-boot-starter-data-rest - Expose Simple REST Services using Spring Data REST
+- spring-boot-starter-actuator - To use advanced features like monitoring & tracing your application out of the box
+STARTERS FOR THE EBEDDED SERVERS:
+- spring-boot-starter-tomcat,  spring-boot-starter-undertow, spring-boot-starter-jetty
+- spring-boot-starter-logging - Logger for logback
+- spring-boot-starter-log4j2 - Logging Log4j2
+- spring-boot-starter-data-rest - Expose Simple REST Services using Spring Data REST
+TOTO: Try to find a list of Spring Boot Starters
+Here is one: https://docs.spring.io/spring-boot/docs/current/reference/html/using-spring-boot.html#using-boot-starter
+
+
+Step 9 : Spring Boot Actuator/REST Hal Standard
+spring-boot-in-10-steps
+Add to pom.xml:
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-rest-hal-browser</artifactId>
+		</dependency>
+- corresponding jar files added on Save
+Start as Java Application
+http://localhost:8080/actuator
+{
+"_links":{
+		"self":{
+		"href": "http://localhost:8080/actuator",
+		"templated": false
+		},
+		"health":{
+		"href": "http://localhost:8080/actuator/health",
+		"templated": false
+		},
+		"health-path":{
+		"href": "http://localhost:8080/actuator/health/{*path}",
+		"templated": true
+		},
+		"info":{
+		"href": "http://localhost:8080/actuator/info",
+		"templated": false
+		}
+	}
+}
+http://localhost:8080/actuator/health
+{
+	"status": "UP"
+}
+resources/application.properties:
+logging.level.org.springframework=debug
+management.endpoints.web.exposure.include=*      <----- Added this line
+- Save and Start App
+- NOTE: Instructor has Spring Tools Eclipse Plugin (which I could not find in Eclipse MarketPlace)
+http://localhost:8080/actuator:  (Many more entries)
+{
+"_links":{
+"self":{
+"href": "http://localhost:8080/actuator",
+"templated": false
+},
+"beans":{
+"href": "http://localhost:8080/actuator/beans",
+"templated": false
+},
+"caches-cache":{
+"href": "http://localhost:8080/actuator/caches/{cache}",
+"templated": true
+},
+"caches":{
+"href": "http://localhost:8080/actuator/caches",
+"templated": false
+},
+"health":{
+"href": "http://localhost:8080/actuator/health",
+"templated": false
+},
+"health-path":{
+"href": "http://localhost:8080/actuator/health/{*path}",
+"templated": true
+},
+"info":{
+"href": "http://localhost:8080/actuator/info",
+"templated": false
+},
+"conditions":{
+"href": "http://localhost:8080/actuator/conditions",
+"templated": false
+},
+"configprops":{
+"href": "http://localhost:8080/actuator/configprops",
+"templated": false
+},
+"env":{
+"href": "http://localhost:8080/actuator/env",
+"templated": false
+},
+"env-toMatch":{
+"href": "http://localhost:8080/actuator/env/{toMatch}",
+"templated": true
+},
+"loggers":{
+"href": "http://localhost:8080/actuator/loggers",
+"templated": false
+},
+"loggers-name":{
+"href": "http://localhost:8080/actuator/loggers/{name}",
+"templated": true
+},
+"heapdump":{
+"href": "http://localhost:8080/actuator/heapdump",
+"templated": false
+},
+"threaddump":{
+"href": "http://localhost:8080/actuator/threaddump",
+"templated": false
+},
+"metrics":{
+"href": "http://localhost:8080/actuator/metrics",
+"templated": false
+},
+"metrics-requiredMetricName":{
+"href": "http://localhost:8080/actuator/metrics/{requiredMetricName}",
+"templated": true
+},
+"scheduledtasks":{
+"href": "http://localhost:8080/actuator/scheduledtasks",
+"templated": false
+},
+"mappings":{
+"href": "http://localhost:8080/actuator/mappings",
+"templated": false
+}
+}
+}
+http://localhost:8080/:     (reload)
+- HAL Browser did NOT come up (as it did for the instructor).
+  Its a pretty printer for the above actuator/* and more. Nice tool, but it does NOT work for me.
+
+
+Step 10 : Spring Boot Developer Tools
+- Application is up and running
+- Change a book title
+- (As thought), the server does NOT pick up the change
+How can I make a code change and see the result without bouncing the server?
+spring-boot-in-10-steps
+Add to pom.xml:
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+		</dependency>
+- corresponding jar files added on Save, Project -> Maven -> Update Project  <---------**************
+Start as Java Application
+http://localhost:8080/books:
+[
+{
+"id": 1,
+"name": "Spring Boot Basic",
+"author": "Jerry Carney"
+},
+{
+"id": 2,
+"name": "Mastering React",
+"author": "Mosh Hamedani"
+}
+]
+- Updated BooksController.java, Changed a book name from "Spring Boot Basic" to "Spring Boot Master" (saved source file)
+RESULT- Project reloads in console (Faster than a regular start)
+http://localhost:8080/books:
+[
+{
+"id": 1,
+"name": "Spring Boot Master",   <-----------<<<<<
+"author": "Jerry Carney"
+},
+{
+"id": 2,
+"name": "Mastering React",
+"author": "Mosh Hamedani"
+}
+]
+- Stpring Boot Devtools is smart enough to only reload the Applicaiton Beans, (not the Maven Jars again)
+- Whereas a full bounce loads the Maven Jars and the Applicaiton Beans
+- Imagine a very large application, Devtools will save alot of time with code change verification
+- Imagine a very large application, Devtools will save alot of time with code change verification
+
+
+
+__________________________Spring Level 5 - Spring AOP_________________________
+AOP - Aspect Oriented Programming
+Resource - https://www.tutorialspoint.com/spring/aop_with_spring.htm
+Resource- https://www.differencebetween.com/difference-between-aop-and-vs-oop/
+-What is AOP?
+AOP is a programming paradigm, which deals with breaking down a program in to cohesive areas of functionality
+(called concerns) that cut across multiple areas, in order to increase modularity. Support for abstractions 
+(such as classes, methods, etc.) to group and encapsulate concerns in to unique entities is provided in many other 
+programming paradigms. But concerns (such as “Logging”) are examples of crosscutting concerns, because every l
+ogged part of the system is affected by the strategy used for logging. The main focus of all AOP implementations 
+is to have suitable crosscutting expressions to capture all concerns in a single location.
+
+Spring JDBC to JPA with Hibernate - Github Folder
+https://github.com/in28minutes/spring-master-class/tree/master/04-spring-jdbc-to-jpa
+
+Spring AOP Github Folder
+https://github.com/in28minutes/spring-master-class/tree/master/03-spring-aop
+
+AOP Dependency on Spring Initializr
+In the next step, we use Spring AOP.
+However, AOP dependency is not available on the Spring Initializr website.
+You can look at this discussion for the solution.
+https://www.udemy.com/course/spring-tutorial-for-beginners/learn/lecture/7725826#questions/8619812
+
+Step 01 - Setting up AOP Example - Part 1
+Spring Initializr, com.jerryc.spring.aop, spring-aop. Dependencies: Instructor found as used AOP
+*****NOTE: AOP is NOT available in Spring Initializr (5/4/20). I'll need to add it manually.
+I manually added following dependencies to spring-aop pom.xml: (I had to search Maven for aspectjweaver)
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+		</dependency>
+
+Cross Cutting Concerns - E.G. Logging, Security. Performance. Things not related to a specific Layer (gui, business, dbacess).
+AOP is the best approach for implementing Cross Cutting Concerns.
+Coding: Business1.java, Dao1.java COPY then, Business2.java, Dao2.java
+GOAL- Intercept when the Doa dendency is called and do something
+
+Step 02 - Setting up AOP Example - Part 2
+GOAL- Intercept when the Doa dendency is called, we want to detect, intercept it and print something
+NOTE: Implemented a CommandLineRunner, so a run() method being implemented. Spring Boot/Context launch calls run().
+@SpringBootApplication
+public class SpringAopApplication implements CommandLineRunner {
+	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@Autowired
+	Business1 business1;
+	
+	@Autowired
+	Business2 business2;
+	
+	public static void main(String[] args) {
+		SpringApplication.run(SpringAopApplication.class, args);
+		//ConfigurableApplicationContext applicationContext = SpringApplication.run(SpringAopApplication.class, args);
+	}
+	
+	@Override
+	public void run(String... args) throws Exception {
+		logger.info(business1.calculateSomething());
+		logger.info(business2.calculateSomething());
+	}
+}
+
+
+Step 03 - Defining an @Before advice
+Step 04 - Understand AOP Terminology - Pointcut, Advice, Aspect, Join Point, Weaving and Weaver
+// Weaving - everything below working in concert
+// Weaver - Framework which provides Weaving
+@Aspect  // Combination of Pointcut and Advice
+@Configuration
+public class BeforeAopAspect {
+	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	// Pointcut - expression used in @Before(expr). What methods I want to intercept. 
+	//execution(* PACKAGE.*.*(..))
+	//@Before("execution(* com.jerryc.spring.aop.springaop.business.*.*(..))")
+	//@Before("execution(* com.jerryc.spring.aop.springaop.data.*.*(..))")
+	// JoinPoint - specific interception/execution instance of a method call
+	@Before("execution(* com.jerryc.spring.aop.springaop..*.*(..))")
+	public void before(JoinPoint joinPoint) { // Advice - logic in this method
+		logger.info("Before Intercepted Method Call {}", joinPoint);
+	}
+}
+OUTPUT: Before Intercepted Method Call execution(String com.jerryc.spring.aop.springaop.data.Dao1.retrieveSomething())
+etc...
+//Instructor said you can stop the method from being executed in Advice. NO, this is BullShit *** WTF ***
+
+
+Step 05 - Using @After, @AfterReturning, @AfterThrowing advices
+@Aspect
+@Configuration
+public class AfterAopAspect {
+	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@AfterReturning(
+			value="execution(* com.jerryc.spring.aop.springaop..*.*(..))",
+			returning="result")
+	public void afterFunGpc(JoinPoint joinPoint, Object result) {
+			logger.info("After {} returned with value {}", joinPoint, result);
+	}
+}
+OUTPUT: After execution(String com.jerryc.spring.aop.springaop.data.Dao1.retrieveSomething()) returned with value Dao1
+etc...
+// Also:
+// @AfterThrowing - Exception is thrown (replace result with exception)
+// @After - Success or Exception; however no value is returned
+
+
+Step 06 - Using @Around advice to implement performance tracing
+************ HERE IS WHERE YOU WANT TO CHECK VALIDATION TO ALLOW A METHOD TO PROCEED ************
+@Aspect
+@Configuration
+public class AroundAopAspect {
+	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@Around("execution(* com.jerryc.spring.aop.springaop.business.*.*(..))")
+	public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+		boolean isValid = true; // do validation
+		if (isValid) {
+			long startTime = System.currentTimeMillis();
+			Object ret = joinPoint.proceed();
+			long timeTaken = System.currentTimeMillis() - startTime;
+				
+			logger.info("Time taken by {} is {}", joinPoint, timeTaken);
+			return ret;
+		} else {
+			logger.error("Did NOT pass validation {}", joinPoint);
+			return null;
+		}
+	}
+}
+OUTPUT: Time taken by execution(String com.jerryc.spring.aop.springaop.data.Dao1.retrieveSomething()) is 19
+Time taken by execution(String com.jerryc.spring.aop.springaop.business.Business1.calculateSomething()) is 46
+etc...
+
+
+Step 07 - Best Practice : Use common Pointcut Configuration
+CommonAopConfig.java:
+package com.jerryc.spring.aop.springaop.aspect;
+
+import org.aspectj.lang.annotation.Pointcut;
+
+public class CommonAopConfig {
+	@Pointcut("execution(* com.jerryc.spring.aop.springaop.data.*.*(..))")
+	public void dataLayerExecution() {}
+	
+	@Pointcut("execution(* com.jerryc.spring.aop.springaop.business.*.*(..))")
+	public void businessLayerExecution() {}
+	
+	@Pointcut("execution(* com.jerryc.spring.aop.springaop..*.*(..))")
+	public void allLayerExecution() {}
+}
+-----
+BeforeAopAspect.java:
+Replace: @Before("execution(* com.jerryc.spring.aop.springaop.data.*.*(..))")
+With: @Before("com.jerryc.spring.aop.springaop.aspect.CommonAopConfig.dataLayerExecution()")
+
+
+Step 08 - Quick summary of other Pointcuts
+- A more micro pointcut (NICE)
+@Pointcut("bean(*dao*)")
+	public void beanWithDao() {}
+-----
+@Around("com.jerryc.spring.aop.springaop.aspect.CommonAopConfig.beanWithDao()")
+
+	
+Step 09 - Creating Custom Annotation and an Aspect for Tracking Time
+Blah, Blah: See GitHub code
+
+
+
+
+__________________________Spring Level 6 - Spring JDBC and JPA_________________________
+Step 01 - Setting up a project with JDBC, JPA, H2 and Web Dependencies 
+----------------------------------------------------------------------
+*************** BIG PROBLEM: Spring Initializr went from Spring Framework 2.2.6 to 2.2.7 **************
+- 2.2.7 caused empty (or not seen) Maven Jar files, everything stops (4 hours to determine fix)
+- Not able to choose or enter 2.2.6 in Spring Initializr
+SOLUTION:
+- Start a project with Spring Initializr 2.2.7
+Update pom.xml parent section from:
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.2.7.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+To:
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.2.6.RELEASE</version>                         <-------------------<<<<< change 2.2.7 to 2.2.6
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+----------------------------------------------------------------------
+Dependencies selected from Spring Initializr (see pom.xml): web, data-jdbc, jpa, jdbc, h2, mysql
+----------------------------------------------------------------------
+MySql 8.0 Workbench (To be used later)
+Create Database Schema - person_example
+
+create user 'personuser'@'localhost' identified by 'person';  <------ PWD Jerry Encoded
+grant all on person_example.* to 'personuser'@'localhost';
+
+create table person
+(
+	id integer not null,
+	birth_date timestamp,
+	location varchar(255),
+	name varchar(255),
+	primary key (id)
+);
+
+INSERT INTO PERSON (ID, NAME, LOCATION, BIRTH_DATE ) VALUES(10001,  'Ranga', 'Hyderabad',sysdate());
+INSERT INTO PERSON (ID, NAME, LOCATION, BIRTH_DATE ) VALUES(10002,  'James', 'New York',sysdate());
+INSERT INTO PERSON (ID, NAME, LOCATION, BIRTH_DATE ) VALUES(10003,  'Pieter', 'Amsterdam',sysdate());
+----------------------------------------------------------------------
+>>>>>> ***** Spring Initializr jumped from 2.2.7 from 2.2.6 and flocked me up for HOURS ***** <<<<<
+FIX: Change parent to 2.2.6 im pom.xml
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.2.6.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+
+Step 02 - Launching up H2 Console
+Step 03 - Creating a Database Table in H2 
+Step 04 - Populate data into Person Table 
+- Spring Auto Configuration automatically configures a (datasource) connection to the H2 database
+RECOMMENDED: You can make the database name a constant by configuring this in
+_____resources/application.properties_____:
+spring.h2.console.enabled=true                      <---------<<<<<   Enable the H2 Console
+spring.datasource.url=jdbc:h2:mem:testdb       <---------<<<<<   Database URL
+-----
+resources/data.sql:                                       <---------<<<<<   Application launch executes this sql            
+create table person
+(
+	id integer not null,
+	birth_date timestamp,
+	location varchar(255),
+	name varchar(255),
+	primary key (id)
+);
+
+INSERT INTO PERSON (ID, NAME, LOCATION, BIRTH_DATE ) VALUES(10001,  'Ranga', 'Hyderabad',sysdate());
+INSERT INTO PERSON (ID, NAME, LOCATION, BIRTH_DATE ) VALUES(10002,  'James', 'New York',sysdate());
+INSERT INTO PERSON (ID, NAME, LOCATION, BIRTH_DATE ) VALUES(10003,  'Pieter', 'Amsterdam',sysdate());
+-----
+While Application is running ...
+http://localhost:8080/h2-console
+http://localhost:8080/h2-console/login.do?jsessionid=156a818d2c9a4ca4e70b22913a6fce70
+Click "Connect"
+jdbc:h2:mem:testdb
++ PERSON
+show tables;
+	PERSON	PUBLIC
+show columns from person;
+	ID	INTEGER(10)	NO	PRI	NULL
+	BIRTH_DATE	TIMESTAMP(26)	YES		NULL
+	LOCATION	VARCHAR(255)	YES		NULL
+	NAME	VARCHAR(255)	YES		NULL
+select * from person;
+	10001	2020-05-11 00:00:00	Hyderabad	Ranga
+	10002	2020-05-11 00:00:00	New York	James
+	10003	2020-05-11 00:00:00	Amsterdam	Pieter
+
+
+Step 05 - Implement findAll persons Spring JDBC Query Method in H2
+PersonJdbcDao.java
+@Repository   // We could have said @Component, BUT we want to take advantage of @Repository
+public class PersonJdbcDao {
+	
+	@Autowired
+	JdbcTemplate jdbcTemplate;  // Creates connection to DB and facilitates queries
+	
+	public List<Person> findAll() {  //  (query, mapToBean)
+		return jdbcTemplate.query("select * from person", new BeanPropertyRowMapper(Person.class));
+	}
+}
+Person.java
+public class Person {	
+	private int id;
+	private String name;
+	private String location;
+	private Date birthDate;
+	
+	public Person() {}
+	
+	public Person(int id, String name, String location, Date birthDate) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.location = location;
+		this.birthDate = birthDate;
+	}
+
+	// Getters/Setters
+	// @Override toString()
+}
+
+
+Step 06 - Execute the findAll method using CommandLineRunner
+SpringDataapplication.java
+@SpringBootApplication
+public class SpringDataApplication implements CommandLineRunner { // requires run() method
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@Autowired
+	PersonJdbcDao dao;
+	
+	public static void main(String[] args) {
+		SpringApplication.run(SpringDataApplication.class, args);
+	}
+
+	@Override  // Launched after the Application Context is ready
+	public void run(String... args) throws Exception {
+		logger.info("All people -> {} ", dao.findAll());
+	}
+}
+OUTPUT:
+All people -> [
+Person [id=10001, name=Ranga, location=Hyderabad, birthDate=2020-05-11 00:00:00.0], 
+Person [id=10002, name=James, location=New York, birthDate=2020-05-11 00:00:00.0], 
+Person [id=10003, name=Pieter, location=Amsterdam, birthDate=2020-05-11 00:00:00.0]] 
+
+
+Step 07 - A Quick Review - JDBC vs Spring JDBC
+Looked at typical Java code that:
+- creates a db connection where you must know the driver, user, passwd, dbUrl
+- creates a preparedStatement(connection, "select * from person")
+- resultSet = execution of preparedStatement
+- loop through resultSet for row values
+- houseKeeping: close preparedStatement, close connection
+
+
+************************************* MySQL: AWESOME *************************************************
+Step - GPC try to have same code work with my localhost MySQL Database, which I'm monitoring with MySql Workbench
+
+I added a 4th row MySQL person_example.person table. (Remember that the H2 DB has 3 rows)
+INSERT INTO PERSON (ID, NAME, LOCATION, BIRTH_DATE ) VALUES(10004,  'Jerry', 'Pittsburgh',sysdate());
+- I did NOT change the source code
+I updated resources/application.properties:
+## H2
+#spring.h2.console.enabled=true
+#spring.datasource.url=jdbc:h2:mem:testdb
+
+## MySQL
+spring.datasource.url=jdbc:mysql://localhost:3306/person_example
+spring.datasource.username=personuser
+spring.datasource.password=P3rs0n
+
+I restarted the application: 
+- Locally, I saw a connection and query (select * from person) in the 'Client Connection'  MySQL Tab
+OUTPUT(Debug on):
+o.s.jdbc.core.JdbcTemplate               : Executing SQL query [select * from person]
+o.s.jdbc.datasource.DataSourceUtils      : Fetching JDBC Connection from DataSource
+o.s.jdbc.core.BeanPropertyRowMapper      : Mapping column 'id' to property 'id' of type 'int'
+o.s.jdbc.core.BeanPropertyRowMapper      : Mapping column 'birth_date' to property 'birthDate' of type 'java.util.Date'
+o.s.jdbc.core.BeanPropertyRowMapper      : Mapping column 'location' to property 'location' of type 'java.lang.String'
+o.s.jdbc.core.BeanPropertyRowMapper      : Mapping column 'name' to property 'name' of type 'java.lang.String'
+All people -> [
+Person [id=10001, name=Ranga, location=Hyderabad, birthDate=2020-05-08 15:36:59.0], 
+Person [id=10002, name=James, location=New York, birthDate=2020-05-08 15:36:59.0], 
+Person [id=10003, name=Pieter, location=Amsterdam, birthDate=2020-05-08 15:36:59.0], 
+Person [id=10004, name=Jerry, location=Pittsburgh, birthDate=2020-05-11 14:48:09.0]]    <---------<<< COOL
+*******************************************************************************************************
+************************************* MySQL: BONUS OMG ***********************************************
+___________________Execute a join and have data return from two different tables into one ENTITY_________________
+Added below tables and data to my local MySQL database:
+create table departments (
+	department_id integer AUTO_INCREMENT PRIMARY KEY,
+    department_name varchar(255) NOT null,
+    location varchar(255) NOT null
+);
+describe departments;
+INSERT INTO departments (department_name, location) VALUES('development', 'Cresson');
+INSERT INTO departments (department_name, location) VALUES('testing', 'Gallitzin');
+INSERT INTO departments (department_name, location) VALUES('support', 'Lilly');
+select * from departments;
+
+create table employees
+(
+	employee_id integer AUTO_INCREMENT PRIMARY KEY,
+    first_name varchar(255) NOT null,
+	department_id integer NOT null,
+    CONSTRAINT fk_category
+    FOREIGN KEY (department_id) 
+        REFERENCES departments(department_id)
+);
+describe employees;
+INSERT INTO employees (first_name, department_id ) VALUES('Larry', 1);
+INSERT INTO employees (first_name, department_id) VALUES('Moe', 2);
+INSERT INTO employees (first_name, department_id ) VALUES('Curly', 3);
+INSERT INTO employees (first_name, department_id ) VALUES('Jerry', 1);
+INSERT INTO employees (first_name, department_id) VALUES('Tom', 2);
+INSERT INTO employees (first_name, department_id ) VALUES('Bill', 3);
+select * from employees;
+select * from employees where department_id=2;
+
+select e.first_name, d.department_name, d.location from departments d, employees e where d.department_id=1 and e.department_id=1;
+
+Added following code to project:
+EmployeeInfo.java
+public class EmployeeInfo {	
+	private String first_name;
+	private String department_name;
+	private String location;
+	
+	public EmployeeInfo() {}
+
+	public EmployeeInfo(String first_name, String department_name, String location) {
+		super();
+		this.first_name = first_name;
+		this.department_name = department_name;
+		this.location = location;
+	}
+	
+	// Setters and Getters
+	
+	@Override
+	public String toString() {
+		return "\nEmployeeInfo [first_name=" + first_name + ", department_name=" + department_name + ", location="
+				+ location + "]";
+	}
+}
+
+EmployeeInfoJdbcDao.java
+@Repository   // We could have said @Component, BUT we want to take advantage of @Repository
+public class EmployeeInfoJdbcDao {
+	
+	@Autowired
+	JdbcTemplate jdbcTemplate;  // Creates connection to DB and facilitates queries
+	
+	public List<EmployeeInfo> findAll() {  //  (query, mapToBean)
+		return jdbcTemplate.query(
+		"select e.first_name, d.department_name, d.location from departments d, employees e where d.department_id=1 and e.department_id=1",
+		new BeanPropertyRowMapper(EmployeeInfo.class));
+	}
+}
+
+SpringDataApplication.java
+@SpringBootApplication
+public class SpringDataApplication implements CommandLineRunner { // requires run() method
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@Autowired
+	PersonJdbcDao personDao;
+	
+	@Autowired
+	EmployeeInfoJdbcDao employeeInfoDao;
+	
+	public static void main(String[] args) {
+		SpringApplication.run(SpringDataApplication.class, args);
+	}
+
+	@Override  // Launched after the Application Context is ready
+	public void run(String... args) throws Exception {
+		logger.info("All people -> {} ", personDao.findAll());
+		logger.info("Dept 1 employees -> {} ", employeeInfoDao.findAll());
+	}
+}
+
+OUTPUT:
+All people -> [
+Person [id=10001, name=Ranga, location=Hyderabad, birthDate=2020-05-08 15:36:59.0], 
+Person [id=10002, name=James, location=New York, birthDate=2020-05-08 15:36:59.0], 
+Person [id=10003, name=Pieter, location=Amsterdam, birthDate=2020-05-08 15:36:59.0], 
+Person [id=10004, name=Jerry, location=Pittsburgh, birthDate=2020-05-11 14:48:09.0]] 
+Dept 1 employees -> [
+EmployeeInfo [first_name=Larry, department_name=development, location=Cresson], 
+EmployeeInfo [first_name=Jerry, department_name=development, location=Cresson]] 
+*******************************************************************************************************
+*******************************************************************************************************
+
+
+Step 08 - Whats in the background? Understanding Spring Boot Autoconfiguration
+Question: How did this magically work? 
+	@Autowired
+	JdbcTemplate jdbcTemplate;  // Creates connection to DB and facilitates queries
+Answer:
+At startup: the Spring Boot Framework triggers Auto Configuration which looks at
+1. Frameworks available on the CLASSPATH via {Maven jars}
+2. Existing Beans configured for the application {Component Scan}
+3. {{{{ Auto Configuration }}}}  W O W! Dozens of beans getting launched
+logging.level.root=debug
+============================
+CONDITIONS EVALUATION REPORT
+============================
+Positive matches:
+-----------------
+   DataSourceAutoConfiguration matched:    // DataSource is Automatically Configured and ready for use  <---------<<<<<
+      - @ConditionalOnClass found required classes 'javax.sql.DataSource', 'org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType' (OnClassCondition)
+	  
+   DataSourceTransactionManagerAutoConfiguration matched:
+      - @ConditionalOnClass found required classes 'org.springframework.jdbc.core.JdbcTemplate', 'org.springframework.transaction.PlatformTransactionManager' (OnClassCondition)
+
+   H2ConsoleAutoConfiguration matched:
+      - @ConditionalOnClass found required class 'org.h2.server.web.WebServlet' (OnClassCondition)
+      - found 'session' scope (OnWebApplicationCondition)
+      - @ConditionalOnProperty (spring.h2.console.enabled=true) matched (OnPropertyCondition)
+
+   JdbcTemplateAutoConfiguration matched:
+      - @ConditionalOnClass found required classes 'javax.sql.DataSource', 'org.springframework.jdbc.core.JdbcTemplate' (OnClassCondition)
+      - @ConditionalOnSingleCandidate (types: javax.sql.DataSource; SearchStrategy: all) found a primary bean from beans 'dataSource' (OnBeanCondition)
+
+	:
+
+
+Step 09 - Implementing findById Spring JDBC Query Method 
+Step 10 - Implementing deleteById Spring JDBC Update Method 
+Step 11 - Implementing insert and update Spring JDBC Update Methods
+Step 12 - Creating a custom Spring JDBC RowMapper 
+- see code
+
+ 
+Step 13 - Quick introduction to JPA
+JDBC: 
+- Write query, then run it and map results. With a large DB (100s table), sql becomes a burden (GPC:unless Stored Procedures)
+JPA: 
+- Map the Entities; map directly an Object to a row in table
+- Define Entities and their relationships (Joins), JPA creates queries on the operation you want to perform
+- The job of writing the queries shifts from the developer to a Framework (JPA)
+- Is like an Interface; it defines a set of Annotations and a set of Interfaces
+- Mapping an Object to a Relation
+Hibernate:
+- Most Popular implementation of JPA
+- JPA is the Interace and Hiberate is the class the implements it
+- ORM: Object Relational Mapping
+- Exististed before JAP as apopular ORM,
+  so the Spring Team/EE decided decided on a standard for ORM -> JPA Standard for ORM
+JPA:
+- Knowing JPA is good, because if another ORM replaces Hibernate, then you can easily shift to it
+
+
+Step 14 - Defining Person Entity
+Step 15 - Implementing findById JPA Repository Method
+Step 16 - Implementing insert and update JPA Repository Methods 
+Step 17 - Implementing deleteById JPA Repository Method
+Step 18 - Implementing findAll using JPQL Named Query
+- see code
+ 
+Step 19 - Introduction to Spring Data JPA Step
+- see very little code, WOW - WTF, That was too easy   <<<*****************************************<<<
+
+Step 20 - Connecting to Other Databases
+- E.g. MySQL, GPC - I know, been using a MySQL Database on my PC for this section
+- Lesson: Switching to a different (relational) database is not alot of work
+
+
+
+__________________________________Web Application with Spring MVC__________________________________
+Section Introduction - Basic Web Application
+
+
+Step 01 : Setting up Your First Java Web Application
+
+
+Step 01 : Theory 1 - Maven and Magic
+
+
+Step 01 : Theory 2 - What is a Servlet?
+
+
+Step 01 : Theory 3 - Web Application Request Flow
+
+
+Step 01 : Theory 4 - Understand Your First Servlet - LoginServlet
+
+
+Step 02 : Create LoginServlet From Scratch Again and Your First View
+
+
+Step 02 : Theory - Play Time - Let's Try Breaking Things
+
+
+Step 03 : Passing Request Parameters using Get Method
+
+
+108. Step 03 : Theory - Introduction and End to Scriptlets
+
+
+Step 04 : Disadvantages of Get Parameters
+
+
+Step 05 : Your First Post Request
+
+
+Step 06 : Your First Servlet doPost Method
+
+
+Step 07 : Lets Add a Password Field
+
+
+Step 10 : Setting up Maven,Tomcat and Simple JEE Application
+
+
+Step 11 : Setting up Spring MVC with 4 mini steps
+
+
+Step 12 : Your First Spring MVC Controller
+
+
+Step 13 : Part 1 - Your First Spring MVC View : ViewResolver
+
+
+Step 13 : Part 2 - Theory Break - Spring MVC Architecture
+
+
+Step 13 : Part 3 - Play Break - Try Breaking Things
+
+
+Step 14 : Add Logging Framework Log4j
+
+
+Step 15 : Redirect to Welcome Page : ModelMap and @RequestParam
+
+
+Step 16 : Use LoginService to Authenticate
+
+
+Step 17 : Spring Autowiring and Dependency Injection
+
