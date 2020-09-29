@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 //@Table(name="person") // not needed because Table name is the Class name
-//@NamedQuery(name="find_all_persons", query="select p from Person p") - REQUIRED for Hibernate
+//@NamedQuery(name="find_all_persons", query="select p from Person p") //- REQUIRED for Hibernate
 public class Person {
 	@Id   // indicates that this is a primary key
 	//@GeneratedValue  // generates a unique value // not needed, table has AUTO_INCREMENT

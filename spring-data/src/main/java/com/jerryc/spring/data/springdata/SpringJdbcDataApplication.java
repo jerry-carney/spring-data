@@ -13,7 +13,7 @@ import com.jerryc.spring.data.springdata.entity.Person;
 import com.jerryc.spring.data.springdata.jdbc.EmployeeInfoJdbcDao;
 import com.jerryc.spring.data.springdata.jdbc.PersonJdbcDao;
 
-//@SpringBootApplication
+@SpringBootApplication
 public class SpringJdbcDataApplication implements CommandLineRunner { // requires run() method
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
@@ -39,18 +39,18 @@ public class SpringJdbcDataApplication implements CommandLineRunner { // require
 		
 		// CREATE - PUT - insert
 		Person personForInsert = new Person("Tara", "Paris", new Date());
-		logger.info("Insert person with id 10008-> {} ", personDao.insert(personForInsert));
+		logger.info("Insert new person Tara -> {} ", personDao.insert(personForInsert));
 		
 		// UPDATE - POST - update
 		Person personForUpdate = new Person(3, "Pieter", "Rome", new Date());
-		logger.info("Update person with id 10003-> {} ", personDao.update(personForUpdate));
+		logger.info("Update person Peiter with id 3-> {} ", personDao.update(personForUpdate));
 		
 		// After the above CRUD operations, see what Person table looks like now
 		logger.info("Get all people -> {} ", personDao.findAll());
 		
 		
 		// **** GPC - Select with join of 2 tables Departments and Employees ****
-		logger.info("Dept 1 employees -> {} ", employeeInfoDao.findByDeptId(1));
+		logger.info("JOIN: Department 1 employees -> {} ", employeeInfoDao.findByDeptId(1));
 		
 	}
 }
